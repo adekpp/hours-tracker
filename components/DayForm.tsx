@@ -57,6 +57,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
       });
       setIsModalOpen(false);
       toast.success("Dzień został zaktualizowany");
+      queryClient.invalidateQueries(["months"]);
     },
     onError: (error) => {
       console.error(error);
@@ -118,7 +119,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
             checked={leaveType === "sickLeave"}
             onChange={handleRadioChange}
             onClick={handleRadioDeselect}
-            className="mr-2 radio radio-accent radio-xs"
+            className="radio-accent radio radio-xs mr-2"
           />
           Zwolnienie lekarskie
         </label>
@@ -130,7 +131,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
             checked={leaveType === "vacations"}
             onChange={handleRadioChange}
             onClick={handleRadioDeselect}
-            className="mr-2 radio radio-accent radio-xs"
+            className="radio-accent radio radio-xs mr-2"
           />
           Urlop
         </label>
@@ -189,7 +190,8 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
             type="checkbox"
             {...register("businessTrip")}
             disabled={!!leaveType}
-            className="mr-2 checkbox checkbox-accent checkbox-xs" />
+            className="checkbox-accent checkbox checkbox-xs mr-2"
+          />
           Delegacja
         </label>
       </div>

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Day from "@/components/Day";
 import { Toaster } from "react-hot-toast";
-import { calculateTotalHours } from "@/lib/calculateTotalHours";
 export default function MonthDetails() {
   const [filteredDays, setFilteredDays] = useState<IDay[]>([]);
 
@@ -51,12 +50,21 @@ export default function MonthDetails() {
       <DayPicker days={month?.days || []} onFilter={setFilteredDays} />
 
       <div>
-        <h1>
-          {month?.monthName} {calculateTotalHours(month?.days || [])}{" "}
-        </h1>
-        <p className="md:text-md mt-6 w-full text-left text-sm font-semibold tracking-wider text-white">
-          Wybierz dzień aby uzupełnić godziny:
-        </p>
+        {month && (
+          <div className="mt-6 flex w-full flex-row place-content-between items-center">
+            <p className="md:text-md text-sm font-semibold tracking-wider text-white">
+              Wybierz dzień aby uzupełnić godziny:
+            </p>
+            <button
+              onClick={() => {
+                router.push(`/month/summary/id=${month.id}`);
+              }}
+              className="btn-xs btn bg-teal-800 lowercase"
+            >
+              Zobacz szczegóły
+            </button>
+          </div>
+        )}
 
         <div className="mt-2 grid grid-cols-3 gap-2 md:grid-cols-7">
           {filteredDays?.map((day) => (

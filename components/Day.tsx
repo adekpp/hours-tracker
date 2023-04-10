@@ -13,7 +13,6 @@ export default function Day({ day }: DayProps) {
 
   const handleDayClick = () => {
     setIsModalOpen(true);
-    console.log(day);
   };
 
   return (
