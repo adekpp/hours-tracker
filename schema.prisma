@@ -1,0 +1,91 @@
+datasource db {
+  provider          = "cockroachdb"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  months        Month[]
+}
+
+model Month {
+  id          String @id @default(cuid())
+  monthNumber Int
+  monthName   String
+  year        Int
+  days        Day[]
+  userEmail   String
+  user        User   @relation(fields: [userEmail], references: [email])
+  hoursTotal  Int    @default(0)
+
+  // @@unique([monthName, year, userEmail])
+}
+
+model Day {
+  id           String  @id @default(cuid())
+  dayName      String
+  date         String
+  month        Month   @relation(fields: [monthId], references: [id])
+  monthId      String
+  from         String?
+  to           String?
+  hours        String?
+  leaveType    String?
+  breakTime    String?
+  businessTrip Boolean @default(false)
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum MonthOrderByWithRelationInput {
+  monthName_asc
+  monthName_desc
+  monthNumber_asc
+  monthNumber_desc
+  year_asc
+  year_desc
+}
