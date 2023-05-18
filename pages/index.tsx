@@ -3,7 +3,6 @@ import Loader from "@/components/Loader";
 import { IMonth } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { NextApiRequest } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -19,11 +18,11 @@ export default function Home() {
     () => axios.get(`/api/months`).then((res) => res.data),
     {
       refetchOnWindowFocus: false,
-      enabled: !!router.isReady,
       cacheTime: Infinity,
       staleTime: Infinity,
     }
   );
+  console.log(isLoading, isFetching);
 
   useEffect(() => {
     if (!months) return;
@@ -38,12 +37,11 @@ export default function Home() {
       <Head>
         <title>Hours Tracker</title>
       </Head>
-      {isLoading ||
-        (isFetching && (
-          <div className="flex flex-1 items-center">
-            <Loader />
-          </div>
-        ))}
+      {isLoading && (
+        <div className="flex flex-1 items-center">
+          <Loader />
+        </div>
+      )}
     </>
   );
 }
