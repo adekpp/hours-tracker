@@ -28,21 +28,19 @@ model Month {
   userEmail   String
   user        User   @relation(fields: [userEmail], references: [email])
   hoursTotal  Int    @default(0)
-
-  // @@unique([monthName, year, userEmail])
 }
 
 model Day {
   id           String  @id @default(cuid())
   dayName      String
-  date         String
+  date         DateTime
   month        Month   @relation(fields: [monthId], references: [id])
   monthId      String
-  from         String?
-  to           String?
-  hours        String?
+  from         DateTime?
+  to           DateTime?
+  hours        Int?
   leaveType    String?
-  breakTime    String?
+  breakTime    Int?
   businessTrip Boolean @default(false)
 }
 

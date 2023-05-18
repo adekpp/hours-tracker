@@ -8,21 +8,22 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Day from "@/components/Day";
 import { Toaster } from "react-hot-toast";
+import Head from "next/head";
 export default function MonthDetails() {
-  const [filteredDays, setFilteredDays] = useState<IDay[]>([]);
-
   const router = useRouter();
-  const query = router.query;
+  const { id } = router.query;
+
+  const [filteredDays, setFilteredDays] = useState<IDay[]>([]);
 
   const {
     data: month,
     isFetching,
     isError,
   } = useQuery<IMonth>(
-    ["month", query.month],
+    ["month", id],
     () =>
       axios
-        .get(`/api/month?${query.month}`)
+        .get(`/api/month?${id}`)
         .then((res) => res.data)
         .catch((error) => console.error("Error fetching data:", error)),
 
@@ -42,31 +43,34 @@ export default function MonthDetails() {
   if (isError) {
     return <div className="text-white">Coś poszło nie tak.</div>;
   }
-
+  const pageTitle = month ? `Hours Tracker - ${month?.monthName} ${month?.year}` : "Hours Tracker"
   return (
     <>
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <Toaster />
 
       <DayPicker days={month?.days || []} onFilter={setFilteredDays} />
 
-      <div>
+      <div className="flex w-full flex-col place-content-center">
         {month && (
           <div className="mt-6 flex w-full flex-row place-content-between items-center">
-            <p className="md:text-md text-sm font-semibold tracking-wider text-white">
+            <p className="md:text-md mr-3 text-sm font-semibold tracking-wider text-white">
               Wybierz dzień aby uzupełnić godziny:
             </p>
             <button
               onClick={() => {
-                router.push(`/month/summary/id=${month.id}`);
+                router.push(`/month/id=${month.id}/summary`);
               }}
-              className="btn-xs btn bg-teal-800 lowercase"
+              className="text-md rounded-md bg-teal-800 px-2 py-1 tracking-wider text-white shadow-md transition-all duration-75 hover:bg-teal-700 active:scale-95 active:bg-teal-900"
             >
-              Zobacz szczegóły
+              Podsumowanie
             </button>
           </div>
         )}
 
-        <div className="mt-2 grid grid-cols-3 gap-2 md:grid-cols-7">
+        <div className="mt-2 grid grid-cols-3 place-content-center gap-2 sm:grid-cols-4 md:grid-cols-7">
           {filteredDays?.map((day) => (
             <Day key={day.id} day={day} />
           ))}

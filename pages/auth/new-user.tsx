@@ -24,9 +24,9 @@ export default function CreateInitialData({ data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
-  console.log(session);
+  
   if (session?.user?.email) {
-    const res = await fetch(`http://192.168.1.30:3000/api/initial-data/createData`, {
+    const res = await fetch(`${process.env.NEXT_URL}/api/initial-data/createData`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

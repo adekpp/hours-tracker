@@ -1,7 +1,6 @@
 import { NextApiResponse, NextApiRequest } from "next";
 import { prisma } from "../../../lib/prisma";
 import getAllMonthInfo from "@/lib/getMonths";
-import { IDay } from "@/types";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,10 +15,10 @@ export default async function handler(
         allMonthsInfo.map(async (monthInfo) => {
           return await prisma.month.create({
             data: {
-              ...monthInfo,
+              ...(monthInfo as any),
               userEmail: userEmail,
               days: {
-                create: monthInfo?.days?.map((dayInfo: IDay) => ({
+                create: monthInfo?.days?.map((dayInfo) => ({
                   ...dayInfo,
                 })),
               },

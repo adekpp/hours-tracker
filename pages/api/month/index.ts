@@ -10,10 +10,10 @@ export default async function handler(
   if (!session) {
     res.status(401).json({ message: "Not authenticated" });
   }
-  console.log(req.query);
+  
 
   if (req.method === "GET") {
-    console.log(req.query.month);
+    
     try {
       const user = await prisma.user.findUnique({
         where: {

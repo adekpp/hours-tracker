@@ -1,3 +1,4 @@
+import { IDay, IMonth } from "@/types";
 
 interface IMonthData {
   name: string;
@@ -19,7 +20,7 @@ const monthData: IMonthData[] = [
   { name: "Grudzień", number: 12 },
 ];
 
-export default function getAllMonthInfo(year: number): Month[] {
+export default function getAllMonthInfo(year: number): IMonth[] {
   return monthData.map((month) => getMonthInfo(month.name, month.number, year));
 }
 
@@ -27,7 +28,7 @@ function getMonthInfo(
   monthName: IMonthData["name"],
   monthNumber: IMonthData["number"],
   year: number
-): Month {
+): IMonth {
   const dayNames: string[] = [
     "Niedziela",
     "Poniedziałek",
@@ -39,16 +40,14 @@ function getMonthInfo(
   ];
 
   const daysInMonth = new Date(year, monthNumber, 0).getDate();
-  const days: Day[] = [];
+  const days: IDay[] = [];
 
   for (let i = 1; i <= daysInMonth; i++) {
     const date = new Date(year, monthNumber - 1, i);
     const dayName = dayNames[date.getDay()];
-    const formattedMonth = monthNumber.toString().padStart(2, "0");
-    const formattedDay = i.toString().padStart(2, "0");
     days.push({
       dayName: dayName,
-      date: `${formattedDay}.${formattedMonth}.${year}`,
+      date: date,
     });
   }
 

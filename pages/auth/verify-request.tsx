@@ -34,7 +34,7 @@ export default function verifyRequest({
           <h2 className="text-center text-xl">Sprawdź pocztę!</h2>
           <p>Twój link do logowania już tam jest!</p>
         </div>
-        <small>Możesz zamknąć to okno</small>
+        <small className="text-white">Możesz zamknąć to okno</small>
       </div>
     </div>
   );

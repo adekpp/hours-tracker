@@ -1,6 +1,6 @@
-import type { DefaultUser } from 'next-auth';
+import type { DefaultUser } from "next-auth";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
     user?: DefaultUser & {
       id: string;
@@ -21,12 +21,12 @@ interface IMonth {
 interface IDay {
   id?: string;
   dayName: string;
-  date: string;
+  date: Date;
   monthId?: string;
-  from?: string;
-  to?: string;
-  hours?: string;
-  breakTime?: string;
+  from?: Date;
+  to?: Date;
+  hours?: number;
+  breakTime?: number;
   leaveType?: string;
-  businessTrip?: boolean
+  businessTrip?: boolean;
 }

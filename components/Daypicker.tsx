@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import parse from "date-fns/parse";
+import { parseISO } from "date-fns";
 import pl from "date-fns/locale/pl";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { IDay } from "@/types";
@@ -12,10 +12,6 @@ import { motion } from "framer-motion";
 type Props = {
   days: IDay[];
   onFilter: (filteredDays: IDay[]) => void;
-};
-
-const parseDateString = (dateString: string): Date => {
-  return parse(dateString, "dd.MM.yyyy", new Date());
 };
 
 export const DayPicker = ({ days, onFilter }: Props) => {
@@ -34,7 +30,7 @@ export const DayPicker = ({ days, onFilter }: Props) => {
     const filteredData = (() => {
       if (!startDate && !endDate) return days;
       return days?.filter((day: IDay) => {
-        const itemDate = parseDateString(day.date);
+        const itemDate = new Date(day.date);
         const isAfterStartDate = !startDate || itemDate >= startDate;
         const isBeforeEndDate = !endDate || itemDate <= endDate;
         return isAfterStartDate && isBeforeEndDate;
@@ -50,7 +46,7 @@ export const DayPicker = ({ days, onFilter }: Props) => {
         {({ open }) => (
           <>
             <Disclosure.Button
-              className={`flex w-full max-w-[288px] items-center justify-center rounded-md bg-teal-900 px-4 py-2 text-sm font-medium text-white shadow-md hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+              className={`flex w-full max-w-[288px] items-center justify-center rounded-md bg-teal-900 px-4 py-2 text-sm font-medium text-white shadow-md hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75  ${
                 open && "bg-gradient-to-b from-teal-900 to-teal-700"
               }`}
             >
@@ -76,8 +72,8 @@ export const DayPicker = ({ days, onFilter }: Props) => {
                     dateFormat={"dd.MM.yyyy"}
                     selected={startDate}
                     onChange={handleStartDateChange}
-                    minDate={parseDateString(days[0]?.date)}
-                    maxDate={parseDateString(days[days.length - 1]?.date)}
+                    minDate={new Date(days[0]?.date)}
+                    maxDate={new Date(days[days.length - 1]?.date)}
                     locale={pl}
                     className="rounded-md  bg-white py-1 pl-2 drop-shadow-md"
                   />
@@ -95,8 +91,8 @@ export const DayPicker = ({ days, onFilter }: Props) => {
                     dateFormat={"dd.MM.yyyy"}
                     selected={endDate}
                     onChange={handleEndDateChange}
-                    minDate={parseDateString(days[0]?.date)}
-                    maxDate={parseDateString(days[days.length - 1]?.date)}
+                    minDate={new Date(days[0]?.date)}
+                    maxDate={new Date(days[days.length - 1]?.date)}
                     locale={pl}
                     className="rounded-md  bg-white py-1 pl-2 drop-shadow-md"
                   />

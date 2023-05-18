@@ -24,6 +24,8 @@
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "framer-motion": "^10.11.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.28",
     "next": "13.2.4",
     "next-auth": "^4.20.1",
     "nodemailer": "^6.9.1",
@@ -37,6 +39,7 @@
     "typescript": "5.0.2"
   },
   "devDependencies": {
+    "@types/jspdf": "^2.0.0",
     "@types/next": "^9.0.0",
     "@types/react-datepicker": "^4.10.0",
     "autoprefixer": "^10.4.14",

@@ -7,62 +7,69 @@ import { IMonth } from "@/types";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { calculateTotalHours } from "@/lib/calculateTotalHours";
+import { calculateHours } from "@/lib/calculateHours";
 
-export function MonthsDropdown() {
+type MonthsDropdownProps = {
+  showHours?: boolean;
+  redirectTo: "details" | "summary";
+};
+export function MonthsDropdown({
+  showHours = true,
+  redirectTo = "details",
+}: MonthsDropdownProps) {
   const router = useRouter();
-
   const { data: session, status } = useSession();
-  const { data: months, isLoading } = useQuery<IMonth[]>(
+  const {
+    data: months,
+    isLoading,
+    isFetching,
+  } = useQuery<IMonth[]>(
     ["months"],
     () => axios.get(`/api/months`).then((res) => res.data),
     {
       refetchOnWindowFocus: false,
-      enabled: !!session,
+      enabled: !!router.isReady && !!session,
       cacheTime: Infinity,
+      staleTime: Infinity,
     }
   );
 
   const [selected, setSelected] = useState<IMonth | null>();
   const [totalHours, setTotalHours] = useState<string | null>("");
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!months) return;
     setSelected(
       months
-        ? months.find((month) => month.id === router.query.month?.slice(3)) ||
-            null
+        ? months.find((month) => month.id === router.query.id?.slice(3)) || null
         : null
     );
-  }, [router.isReady, months, router.query.month]);
+  }, [router.isReady, months, router.query.id]);
 
   useEffect(() => {
     if (!selected) return;
-    setTotalHours(calculateTotalHours(selected.days || []));
+    setTotalHours(calculateHours(selected.days || []) || "");
   }, [selected]);
 
   const handleSelectedChange = (newSelected: IMonth) => {
     setSelected(newSelected);
-    router.push(`/month/id=${newSelected.id}`);
+    redirectTo === "details" &&
+      router.push(`/month/id=${newSelected.id}/details`);
+    redirectTo === "summary" &&
+      router.push(`/month/id=${newSelected.id}/summary`);
   };
-  if (isLoading) {
-    return (
-      <div className=" mt-8 w-72 sm:mt-2">
-        <div className="relative mt-1">
-          <div className="w-full animate-pulse rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">Ładuję...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
   return (
     <div className="top-16 mt-8 w-72 sm:mt-2">
-      <Listbox value={selected} onChange={handleSelectedChange}>
+      <Listbox value={selected || {}} onChange={handleSelectedChange}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <div className="flex w-full place-content-between">
-              <span className="block truncate">{selected?.monthName}</span>
-              <span className="block truncate">{totalHours}</span>
+              <span className="block truncate">
+                {selected?.monthName || "Ładuję..."}
+              </span>
+              {showHours && (
+                <span className="block truncate">{totalHours}</span>
+              )}
             </div>
 
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -80,7 +87,12 @@ export function MonthsDropdown() {
           >
             <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {months?.map((month, index) => (
-                <Link key={month.id} href={`/month/id=${month.id}`}>
+                <Link
+                  key={month.id}
+                  href={`/month/id=${month.id}/${
+                    redirectTo === "details" ? "details" : "summary"
+                  }`}
+                >
                   <Listbox.Option
                     key={index}
                     className={({ active }) =>
@@ -109,7 +121,7 @@ export function MonthsDropdown() {
                               selected ? "font-medium" : "font-normal"
                             }`}
                           >
-                            {calculateTotalHours(month.days || [])}
+                            {calculateHours(month.days || []) || ""}
                           </span>
                         </div>
                         {selected ? (

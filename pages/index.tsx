@@ -1,38 +1,56 @@
 import MainLayout from "@/components/Layout";
 import { IMonth } from "@/types";
 import { NextApiRequest } from "next";
+import Head from "next/head";
 
-export default function Home() {}
+export default function Home() {
+  return (
+    <Head>
+      <title>Hours Tracker</title>
+    </Head>
+  );
+}
+
 Home.getLayout = function getLayout(page: React.ReactElement) {
   return <MainLayout>{page}</MainLayout>;
 };
 
 export async function getServerSideProps({ req }: { req: NextApiRequest }) {
-  const months = await fetch("http://192.168.1.30:3000/api/months", {
-    headers: {
-      cookie: req.headers.cookie as string,
-    },
-  });
-  const data = await months.json();
-  if (data) {
-    const currentMonth = data.find(
-      (month: IMonth) => month.monthNumber === new Date().getMonth() + 1
-    );
-    if (currentMonth) {
-      return {
-        redirect: {
-          destination: `http://192.168.1.30:3000/month/id=${currentMonth.id}`,
-          permanent: false,
-        },
-      };
+  try {
+    const months = await fetch(`${process.env.NEXT_URL}/api/months`, {
+      headers: {
+        cookie: req.headers.cookie || "",
+      },
+    });
+    const data = await months.json();
+
+    if (data) {
+      const currentMonth: IMonth = data.find(
+        (month: IMonth) => month.monthNumber === new Date().getMonth() + 1
+      );
+
+      if (currentMonth) {
+        return {
+          redirect: {
+            destination: `${process.env.NEXT_URL}/month/id=${currentMonth.id}/details`,
+            permanent: false,
+          },
+        };
+      }
     }
-  }
-  
+
     return {
       redirect: {
-        destination: `http://192.168.1.30:3000/api/auth/signin`,
+        destination: `${process.env.NEXT_URL}/api/auth/signin`,
         permanent: false,
       },
-    
-  };
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        error: "Error fetching data.",
+      },
+    };
+  }
 }

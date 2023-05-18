@@ -24,6 +24,7 @@ export default function MyApp({
   const layout = getLayout(
     <>
       <Head>
+        <title>Hours Tracker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Component {...pageProps} />

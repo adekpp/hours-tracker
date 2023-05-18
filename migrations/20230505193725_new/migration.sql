@@ -28,13 +28,13 @@ CREATE TABLE "Month" (
 CREATE TABLE "Day" (
     "id" STRING NOT NULL,
     "dayName" STRING NOT NULL,
-    "date" STRING NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
     "monthId" STRING NOT NULL,
-    "from" STRING,
-    "to" STRING,
-    "hours" STRING,
+    "from" TIMESTAMP(3),
+    "to" TIMESTAMP(3),
+    "hours" INT4,
     "leaveType" STRING,
-    "breakTime" STRING,
+    "breakTime" INT4,
     "businessTrip" BOOL NOT NULL DEFAULT false,
 
     CONSTRAINT "Day_pkey" PRIMARY KEY ("id")
