@@ -1,56 +1,53 @@
 import MainLayout from "@/components/Layout";
+import Loader from "@/components/Loader";
 import { IMonth } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { NextApiRequest } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const {
+    data: months,
+    isLoading,
+    isFetching,
+  } = useQuery<IMonth[]>(
+    ["months"],
+    () => axios.get(`/api/months`).then((res) => res.data),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!router.isReady,
+      cacheTime: Infinity,
+      staleTime: Infinity,
+    }
+  );
+
+  useEffect(() => {
+    if (!months) return;
+    const currentMonth: IMonth | undefined = months.find(
+      (month: IMonth) => month.monthNumber === new Date().getMonth() + 1
+    );
+    currentMonth && router.push(`/month/id=${currentMonth.id}/details`);
+  }, [months, router]);
+
   return (
-    <Head>
-      <title>Hours Tracker</title>
-    </Head>
+    <>
+      <Head>
+        <title>Hours Tracker</title>
+      </Head>
+      {isLoading ||
+        (isFetching && (
+          <div className="flex flex-1 items-center">
+            <Loader />
+          </div>
+        ))}
+    </>
   );
 }
 
 Home.getLayout = function getLayout(page: React.ReactElement) {
   return <MainLayout>{page}</MainLayout>;
 };
-
-export async function getServerSideProps({ req }: { req: NextApiRequest }) {
-  try {
-    const months = await fetch(`${process.env.NEXT_URL}/api/months`, {
-      headers: {
-        cookie: req.headers.cookie || "",
-      },
-    });
-    const data = await months.json();
-
-    if (data) {
-      const currentMonth: IMonth = data.find(
-        (month: IMonth) => month.monthNumber === new Date().getMonth() + 1
-      );
-
-      if (currentMonth) {
-        return {
-          redirect: {
-            destination: `${process.env.NEXT_URL}/month/id=${currentMonth.id}/details`,
-            permanent: false,
-          },
-        };
-      }
-    }
-
-    return {
-      redirect: {
-        destination: `${process.env.NEXT_URL}/api/auth/signin`,
-        permanent: false,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: {
-        error: "Error fetching data.",
-      },
-    };
-  }
-}
