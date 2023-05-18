@@ -15,6 +15,17 @@ const generatePDF = async (
   const text = `Godziny pracy ${monthName} ${year}`;
   const pageWidth = doc.internal.pageSize.width;
   doc.text(text, pageWidth / 2, 10, { align: "center" });
+
+  // Add Color Legend
+
+  doc.setFillColor(250, 204, 21); 
+  doc.rect(14, 18, 5, 5, 'F');
+  doc.setFontSize(10);
+  doc.text(" - Urlop / Zwolnienie", 19, 22);
+  doc.setFillColor(96, 165, 250); 
+  doc.rect(55, 18, 5, 5, 'F');
+  doc.text(" - Delegacja", 60, 22); 
+ 
   const columns = ["Data", "Dzień", "Godziny", "Nadgodziny"];
   const data = daysInMonth
     .filter((day) => day.hours != null || day.leaveType)
@@ -45,7 +56,7 @@ const generatePDF = async (
     });
 
   autoTable(doc, {
-    startY: 20,
+    startY: 30,
     columns: columns,
     body: data,
     styles: {
