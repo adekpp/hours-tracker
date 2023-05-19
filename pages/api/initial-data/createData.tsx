@@ -26,10 +26,12 @@ export default async function handler(
           });
         })
       );
-      res.status(200).json(results);
+      res.status(201).json(results);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error creating months and days" });
     }
+  }else{
+    res.status(405).json({message: "Method not allowed"})
   }
 }
