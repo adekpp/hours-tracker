@@ -9,9 +9,9 @@ export default function CreateInitialData() {
   const router = useRouter();
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
-        setLoading(true);
         if (session?.user?.email) {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_URL}/api/initial-data/createData`,

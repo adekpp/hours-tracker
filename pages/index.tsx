@@ -22,7 +22,6 @@ export default function Home() {
       staleTime: Infinity,
     }
   );
-  console.log(isLoading, isFetching);
 
   useEffect(() => {
     if (!months) return;
