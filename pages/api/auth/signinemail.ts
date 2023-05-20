@@ -9,7 +9,7 @@ export async function CustomsendVerificationRequest(params: { identifier: any; u
   const result = await transport.sendMail({
     to: identifier,
     from: provider.from,
-    subject: `Zaloguj się Working Hours`,
+    subject: `Zaloguj się do Working Hours`,
     text: text({ url, host }),
     html: html({ url, host, theme }),
   });
