@@ -26,3 +26,6 @@ Fork the Project
 5. Open a Pull Request
 
 For any questions or suggestions, please feel free to reach me out.
+
+## License
+This project is licensed under the MIT License.
