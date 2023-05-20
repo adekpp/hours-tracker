@@ -5,7 +5,7 @@ import NextAuth, {
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-
+import { CustomsendVerificationRequest } from "./signinemail";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   pages: {
@@ -22,13 +22,23 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        port: process.env.EMAIL_SERVER_PORT
+          ? Number(process.env.EMAIL_SERVER_PORT)
+          : undefined,
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest({ identifier, url, provider }) {
+        CustomsendVerificationRequest({
+          identifier,
+          url,
+          provider,
+          theme: "light",
+        });
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
