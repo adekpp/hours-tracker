@@ -23,7 +23,7 @@ export default function CreateInitialData() {
               body: JSON.stringify({ userEmail: session.user.email }),
             }
           );
-          if (res.status === 201) {
+          if (res.status === 201 || res.status === 200) {
             setLoading(false);
             router.push("/");
           }
