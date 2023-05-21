@@ -1,7 +1,12 @@
 import { Theme } from "next-auth";
 import { createTransport } from "nodemailer";
 
-export async function CustomsendVerificationRequest(params: { identifier: any; url: any; provider: any; theme: any; }) {
+export async function CustomsendVerificationRequest(params: {
+  identifier: any;
+  url: any;
+  provider: any;
+  theme: any;
+}) {
   const { identifier, url, provider, theme } = params;
   const { host } = new URL(url);
   // NOTE: You are not required to use `nodemailer`, use whatever you want.

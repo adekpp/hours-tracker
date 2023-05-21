@@ -43,15 +43,3 @@
   border: none;
   cursor: pointer;
 }
-
-@media (prefers-colors-scheme: light) {
-  html {
-    color-scheme: light;
-  }
-}
-
-@media (prefers-colors-scheme: dark) {
-  html {
-    color-scheme: light;
-  }
-}

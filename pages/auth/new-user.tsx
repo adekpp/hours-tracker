@@ -13,19 +13,29 @@ export default function CreateInitialData() {
     const fetchData = async () => {
       try {
         if (session?.user?.email) {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_URL}/api/initial-data/createData`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ userEmail: session.user.email }),
-            }
+          const months = await fetch(
+            `${process.env.NEXT_PUBLIC_URL}/api/months`
           );
-          if (res.status === 201 || res.status === 200) {
+          const monthsData = await months.json();
+          if (monthsData.length > 0) {
             setLoading(false);
             router.push("/");
+            return;
+          } else {
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_URL}/api/initial-data/createData`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userEmail: session.user.email }),
+              }
+            );
+            if (res.status === 201 || res.status === 200) {
+              setLoading(false);
+              router.push("/");
+            }
           }
         }
       } catch (error) {

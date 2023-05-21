@@ -23,7 +23,11 @@ export default function MonthDetails() {
     ["month", id],
     () =>
       axios
-        .get(`/api/month?${id}`)
+        .get(`/api/month?${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((res) => res.data)
         .catch((error) => console.error("Error fetching data:", error)),
 
@@ -43,7 +47,9 @@ export default function MonthDetails() {
   if (isError) {
     return <div className="text-white">Coś poszło nie tak.</div>;
   }
-  const pageTitle = month ? `Hours Tracker - ${month?.monthName} ${month?.year}` : "Hours Tracker"
+  const pageTitle = month
+    ? `Hours Tracker - ${month?.monthName} ${month?.year}`
+    : "Hours Tracker";
   return (
     <>
       <Head>

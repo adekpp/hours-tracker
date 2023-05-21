@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Warstwa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .b {
+        fill: #14b8a6;
+      }
+
+      .c {
+        fill: #085e57;
+      }
+    </style>
+  </defs>
+  <rect class="b" width="1920" height="1080"/>
+  <path class="c" d="M1043,379C595.83,297.5,195.38,355.12,0,395.6v684.4H1920V387.82c-237.43,31.7-557.08,49.48-877-8.82Z"/>
+</svg>

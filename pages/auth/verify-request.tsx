@@ -6,13 +6,19 @@ import { getCsrfToken } from "next-auth/react";
 import Image from "next/image";
 import checkMark from "../../public/images/check-mark.svg";
 import logo from "../../public/images/logo.png";
+import { motion } from "framer-motion";
 
 export default function verifyRequest({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <div className="grid min-h-screen w-full place-content-center items-center bg-gradient-to-b from-teal-600 to-blue-300">
-      <div className="flex flex-col place-items-center space-y-5 rounded-md bg-teal-900 p-8 shadow-md ">
+    <div className="grid min-h-screen w-full place-content-center items-center bg-landing bg-cover bg-no-repeat">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="flex flex-col place-items-center space-y-5 rounded-md bg-teal-900 p-8 shadow-md "
+      >
         <div>
           <Image
             src={logo}
@@ -32,10 +38,10 @@ export default function verifyRequest({
         />
         <div className="rounded-md bg-green-600 p-2 text-white shadow-md">
           <h2 className="text-center text-xl">Sprawdź pocztę!</h2>
-          <p>Twój link do logowania już tam jest!</p>
+          <p className="text-sm">Twój link do logowania już tam jest!</p>
         </div>
         <small className="text-white">Możesz zamknąć to okno</small>
-      </div>
+      </motion.div>
     </div>
   );
 }

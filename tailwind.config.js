@@ -10,7 +10,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'landing': 'url("/images/landing.svg")',
+      }
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {

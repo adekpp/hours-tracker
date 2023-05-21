@@ -55,6 +55,9 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    redirect: async ({ url, baseUrl }) => {
+      return Promise.resolve(baseUrl);
+    },
   },
 };
 

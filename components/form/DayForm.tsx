@@ -73,7 +73,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
       <div className="flex w-full place-content-evenly gap-1 text-xs sm:flex-row md:text-base">
         <button
           type="submit"
-          className={`relative w-24 rounded bg-teal-600 py-1 px-3 text-white shadow-md hover:bg-teal-700 active:scale-95 ${
+          className={`relative w-24 rounded bg-teal-600 py-2 px-3 text-white shadow-md hover:bg-teal-700 active:scale-95 ${
             mutation.isLoading ? "opacity-50" : ""
           }`}
         >
@@ -95,7 +95,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
         <button
           type="button"
           onClick={() => setIsModalOpen(false)}
-          className="w-24 rounded bg-red-400 py-1 px-3 text-white shadow-md hover:bg-red-500 active:scale-95"
+          className="w-24 rounded bg-red-400 py-2 px-3 text-white shadow-md hover:bg-red-500 active:scale-95"
         >
           Anuluj
         </button>
@@ -105,7 +105,7 @@ export const DayForm = ({ day, setIsModalOpen }: DayFormProps) => {
             clearErrors();
           }}
           type="button"
-          className="w-24 rounded bg-yellow-400 py-1 px-3 text-white shadow-md hover:bg-yellow-500 active:scale-95"
+          className="w-24 rounded bg-yellow-400 py-2 px-3 text-white shadow-md hover:bg-yellow-500 active:scale-95"
         >
           Wyczyść
         </button>

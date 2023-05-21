@@ -6,6 +6,9 @@ import { getCsrfToken } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import logo from "../../public/images/logo.png";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { motion } from "framer-motion";
 export default function SignIn({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -20,9 +23,14 @@ export default function SignIn({
         />
       </Head>
 
-      <div className="relative flex min-h-screen w-full flex-col place-content-center items-center  bg-gradient-to-b from-teal-600 to-blue-300 text-neutral-900">
+      <div className="relative flex min-h-screen w-full flex-col place-content-center items-center  bg-landing bg-cover bg-no-repeat text-neutral-900">
         <div className="flex w-full  items-center justify-center md:top-0">
-          <div className="flex w-full max-w-full  flex-col place-items-center space-y-5 rounded-md bg-teal-900 p-8 shadow-md md:max-w-xs ">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2, ease: "easeInOut" }}
+            className="flex w-full max-w-full  flex-col place-items-center space-y-5 bg-teal-900 p-8 shadow-md md:max-w-xs md:rounded-md "
+          >
             <Image
               src={logo}
               alt="Logo"
@@ -31,7 +39,7 @@ export default function SignIn({
               className="w-[170px] md:w-[200px]"
             />
             <form
-              className="flex flex-col gap-y-2"
+              className="flex w-full max-w-[280px] flex-col gap-y-2"
               method="post"
               action="/api/auth/signin/email"
             >
@@ -45,13 +53,13 @@ export default function SignIn({
                 autoFocus
               />
               <button
-                className="mt-3 rounded-md bg-success py-2 px-3 font-semibold text-white shadow-md active:scale-95"
+                className="mt-3 rounded-md bg-teal-600 py-2 px-3 font-semibold text-white shadow-md active:scale-95"
                 type="submit"
               >
                 Wyślij link do logowania
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </>
@@ -59,8 +67,18 @@ export default function SignIn({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const csrfToken = await getCsrfToken(context);
-  return {
-    props: { csrfToken },
-  };
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  } else {
+    const csrfToken = await getCsrfToken(context);
+    return {
+      props: { csrfToken },
+    };
+  }
 }

@@ -10,41 +10,73 @@ export default async function handler(
   if (!session) {
     res.status(401).json({ message: "Not authenticated" });
   }
-  
 
   if (req.method === "GET") {
-    
     try {
       const user = await prisma.user.findUnique({
         where: {
           email: session?.user?.email as string,
         },
-        select: {
-          months: {
-            where: {
-              id: req.query.id as string,
-            },
-            include: {
-              days: {
-                orderBy: {
-                  date: "asc",
-                },
-              },
-            },
-          },
+        include: {
+          months: true,
         },
       });
 
-      if (user && user.months.length > 0) {
-        res.status(200).json(user.months[0]);
+      if (user) {
+        let month;
+
+        if (req.query.id) {
+          month = user.months.find((m) => m.id === req.query.id);
+
+          if (month) {
+            month = await prisma.month.findUnique({
+              where: {
+                id: month.id,
+              },
+              include: {
+                days: {
+                  orderBy: {
+                    date: "asc",
+                  },
+                },
+              },
+            });
+          }
+        } else if (req.query.monthNumber) {
+          month = user.months.find(
+            (m) => m.monthNumber === Number(req.query.monthNumber)
+          );
+
+          if (month) {
+            month = await prisma.month.findUnique({
+              where: {
+                id: month.id,
+              },
+              include: {
+                days: {
+                  orderBy: {
+                    date: "asc",
+                  },
+                },
+              },
+            });
+          }
+        }
+
+        if (month) {
+          res.status(200).json(month);
+        } else {
+          res.status(404).json({ message: "Month not found" });
+        }
       } else {
-        res.status(404).json({ message: "Month not found" });
+        res.status(404).json({ message: "User not found" });
       }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Something goes wrong" });
+      res.status(500).json({ message: "Something went wrong" });
     }
   }
+
   if (req.method === "PATCH") {
     try {
       const month = await prisma.month.update({
