@@ -67,18 +67,8 @@ export default function SignIn({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  } else {
-    const csrfToken = await getCsrfToken(context);
-    return {
-      props: { csrfToken },
-    };
-  }
+  const csrfToken = await getCsrfToken(context);
+  return {
+    props: { csrfToken },
+  };
 }
